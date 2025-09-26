@@ -1311,6 +1311,7 @@ h6 {
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1rem;
+  font-weight: 400;
   font-family: inherit;
   transition: all 0.3s ease;
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.08);
@@ -1339,9 +1340,18 @@ h6 {
   cursor: pointer;
 }
 
+#ticketType {
+  color: #da3f08; 
+  font-weight: 400;
+  appearance: none; 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
 #ticketType option {
   color: #1e1e1e;
   text-decoration: none;
+  font-weight: 400;
 }
 
 .submit-btn {
