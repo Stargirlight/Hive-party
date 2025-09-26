@@ -1,3 +1,7 @@
+html, body {
+  overflow-x: hidden;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -441,7 +445,7 @@ h6 {
 }
 
 .body-subheading1 {
-  margin: 0 3rem 1rem;
+  margin: 1rem 3rem 1rem;
   text-transform: uppercase;
   display: flex;
 }
@@ -1258,7 +1262,7 @@ h6 {
   font-size: 12px;
   transition: background 0.3s ease;
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.08);
-  margin: 1rem 3rem 3rem;
+  margin: 2rem 3rem 3rem;
 }
 
 .back-btn:hover {
@@ -1333,6 +1337,11 @@ h6 {
   background-size: 18px;
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.08);
   cursor: pointer;
+}
+
+#ticketType option {
+  color: #1e1e1e;
+  text-decoration: none;
 }
 
 .submit-btn {
@@ -1606,7 +1615,7 @@ h6 {
   }
 
   .back-btn {
-    margin-top: 1.5rem;
+    margin-top: 1.8rem;
   }
 
   .form-group input,
@@ -1646,6 +1655,11 @@ h6 {
     font-size: 3.3rem;
     font-weight: 700;
   }
+
+    .hero-container {
+    margin-top: 1.7rem;
+  }
+
 
   .hero-subtext-two {
     font-weight: 700;
@@ -1732,7 +1746,7 @@ h6 {
   }
 
   .body-subheading1 {
-    margin: 0 1rem 1rem;
+    margin: 1rem;
   }
 
   .body-subheading2 {
@@ -1994,6 +2008,14 @@ h6 {
   .form-group input,
   .form-group select {
     padding: 12px 15px;
+  }
+
+    .ticket-form {
+    width: 100%;
+  }
+
+  .ticket-form .form-group {
+    width: 100%; 
   }
 
   .back-btn {
