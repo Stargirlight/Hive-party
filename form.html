@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ticket Form</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+        <div id="preloader">
+      <img src="./assets/images/logo (1).png" alt="Logo" class="preloader-logo">
+    </div>
+
+  <section class="form-section">
+    <a href="./ticket.html" class="back-btn">← Back to Tickets</a>
+         <div class="body-heading">
+          <div class="body-subheading1">
+            <p class="body-subheading2">join the hive party!</p>
+          </div>
+        </div>
+        <div class="body-white-cover highlights-cover form-cover">
+            <h2 class="form-title">Buy Ticket</h2>
+
+    <form action="summary.html" method="GET" class="ticket-form">
+        <div class="form-group">      
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" required>
+        </div>
+
+
+        <diV class="form-group">      
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" required>
+        </diV>
+
+
+        <div class="form-group">      
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+
+        <div class="form-group">      
+            <label for="ticketType">Ticket Type</label>
+            <select id="ticketType" name="ticketType" required>
+              <option value="regular">Regular - ₦10,000</option>
+              <option value="vip">VIP - ₦30,000</option>
+              <option value="bronze">Bronze Table - ₦500,000</option>
+              <option value="platinum">Platinum Table - ₦1,000,000</option>
+            </select>
+        </div>
+
+
+        <diV class="form-group">      
+            <label for="quantity">Number of Tickets</label>
+            <input type="number" id="quantity" name="quantity" min="1" required>
+        </diV>
+
+
+      <button type="submit" class="submit-btn">Submit</button>
+
+    </form>
+        </div>
+    
+  </section>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get("type");
+
+    const ticketNames = {
+      regular: "Regular Ticket - ₦10,000",
+      vip: "VIP Ticket - ₦30,000",
+      bronze: "Bronze Table - ₦500,000",
+      platinum: "Platinum Table - ₦1,000,000"
+    };
+
+    if (type) {
+      document.getElementById("form-title").innerText = `Buy ${ticketNames[type]}`;
+      document.getElementById("ticketType").value = type;
+    }
+  </script>
+      <script src="main.js"></script>
+
+
+</body>
+</html>

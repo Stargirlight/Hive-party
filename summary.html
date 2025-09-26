@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ticket Summary</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+        <div id="preloader">
+      <img src="./assets/images/logo (1).png" alt="Logo" class="preloader-logo">
+    </div>
+
+  <section class="summary-section">
+    <div class="section-wrapper">
+      <h2 class="form-title summary-title">Payment Summary</h2>
+      <div id="summary"></div>
+      <p class="body-subheading2 summary-arrow-para">click the card 
+        <img src="./assets/images/icons8-arrow.png" alt="downward arrow" class="summary-icon"/>
+      </p>
+      <div class="summary-image">
+        <img src="./assets/images/Raven-card.png" alt="Raven Card" class="RavenCard-Img"/>
+      </div> 
+    </div>
+
+  </section>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const firstName = params.get("firstName");
+    const lastName = params.get("lastName");
+    const email = params.get("email");
+    const ticketType = params.get("ticketType");
+    const quantity = parseInt(params.get("quantity"));
+
+    // Ticket prices
+    const prices = {
+      regular: 10000,
+      vip: 30000,
+      bronze: 500000,
+      platinum: 1000000
+    };
+
+    // Calculate total
+    const total = prices[ticketType] * quantity;
+
+    // Result
+    document.getElementById("summary").innerHTML = `
+    <div class="summary-flex">
+      <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Ticket Type:</strong> ${ticketType.toUpperCase()}</p>
+      <p><strong>Quantity:</strong> ${quantity}</p>
+    </div>
+      <p class="total"><span class="total1">Total Price:</span> ₦${total.toLocaleString()}</p>
+    `;
+  </script>
+      <script src="main.js"></script>
+
+
+</body>
+</html>
