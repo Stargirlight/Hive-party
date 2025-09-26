@@ -1307,7 +1307,7 @@ h6 {
 
 .form-group input,
 .form-group select {
-  padding: 12px 155px 12px 15px;
+  padding: 12px 15px;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1rem;
@@ -1339,6 +1339,14 @@ h6 {
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.08);
   cursor: pointer;
 }
+
+  .ticket-form {
+    width: 100%;
+  }
+
+  .ticket-form .form-group {
+    width: 100%;
+  }
 
 #ticketType {
   color: #da3f08; 
@@ -1626,15 +1634,6 @@ h6 {
 
   .back-btn {
     margin-top: 1.8rem;
-  }
-
-  .form-group input,
-  .form-group select {
-    padding: 12px 145px 12px 15px;
-  }
-
-  .form-group select {
-    margin-right: -17rem;
   }
 
   .summary-flex {
@@ -2013,19 +2012,6 @@ h6 {
     font-size: 2rem;
     font-weight: 700;
     line-height: 1.45;
-  }
-
-  .form-group input,
-  .form-group select {
-    padding: 12px 15px;
-  }
-
-    .ticket-form {
-    width: 100%;
-  }
-
-  .ticket-form .form-group {
-    width: 100%; 
   }
 
   .back-btn {
