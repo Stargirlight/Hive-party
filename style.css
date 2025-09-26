@@ -909,8 +909,8 @@ h6 {
 }
 
 .accordion-header .icon {
-  font-weight: 100;
-  font-size: 1.3rem;
+  font-weight: 300;
+  font-size: 1.2rem;
   transition: transform 0.3s ease;
 }
 
@@ -1833,7 +1833,7 @@ h6 {
   }
 
   .highlight-text {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .highlight-para2 {
