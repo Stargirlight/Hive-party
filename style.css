@@ -1259,7 +1259,10 @@ h6 {
   color: #fff;
   text-decoration: none;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 0.8rem;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
   transition: background 0.3s ease;
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.08);
   margin: 2rem 3rem;
@@ -2120,6 +2123,7 @@ h6 {
   }
 
   .ticket-bck-img {
+    background-image: url('./assets/images/about-image1.jpg');
     padding-top: 2rem;
   }
 
