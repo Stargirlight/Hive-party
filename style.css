@@ -1033,7 +1033,6 @@ h6 {
 .location-conatiner {
   position: relative;
   z-index: 2;
-  padding-top: 1rem;
 }
 
 .location-subheading {
@@ -1924,7 +1923,7 @@ h6 {
   }
 
   .heading1 {
-    font-size: 1rem;
+    font-size: 0.94rem;
   }
 
   .heading2 {
@@ -1932,7 +1931,7 @@ h6 {
   }
 
   .location-heading {
-    font-size: 3.5rem;
+    font-size: 3.2rem;
   }
 
   .location-subheading {
