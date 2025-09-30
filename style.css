@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   overflow-x: hidden;
 }
 
@@ -1188,7 +1189,7 @@ h6 {
 .back-btn {
   display: inline-block;
   margin-bottom: 1.5rem;
-  padding: 8px 15px;
+  padding: 8px 10px;
   background: #444;
   color: #fff;
   text-decoration: none;
@@ -1262,8 +1263,7 @@ h6 {
 }
 
 .form-group select {
-  padding: 12px 40px 12px 15px;
-  margin-right: -19rem;
+  padding: 12px 15px;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1rem;
@@ -1277,24 +1277,24 @@ h6 {
   cursor: pointer;
 }
 
-  .ticket-form {
-    width: 100%;
-  }
+.ticket-form {
+  width: 100%;
+}
 
-  .ticket-form .form-group {
-    width: 100%;
-  }
+.ticket-form .form-group {
+  width: 100%;
+}
 
 #ticketType {
-  color: #da3f08; 
+  color: #da3f08;
   font-weight: 400;
-  appearance: none; 
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
 #ticketType option {
-  color: #1e1e1e;
+  color: #000;
   text-decoration: none;
   font-weight: 400;
 }
@@ -1380,7 +1380,7 @@ h6 {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(8px); /* how far down it goes */
+    transform: translateY(8px);
   }
 }
 
@@ -1590,10 +1590,9 @@ h6 {
     font-weight: 700;
   }
 
-    .hero-container {
+  .hero-container {
     margin-top: 2.1rem;
   }
-
 
   .hero-subtext-two {
     font-weight: 700;
@@ -1687,7 +1686,7 @@ h6 {
     font-size: 0.75rem;
     letter-spacing: 1.5px;
   }
-  
+
   .divider1 {
     width: 0;
   }
