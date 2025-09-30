@@ -32,37 +32,31 @@ window.addEventListener('scroll', () => {
   }
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-  const container = document.querySelector('.section-wrapper.sponsors-container');
-  if (!container) return;
+document.addEventListener('DOMContentLoaded', () => {
+  const grid = document.querySelector('.sponsors-grid');
+  if (!grid) return;
 
-  const logos = Array.from(container.querySelectorAll('.sponsor-logo'));
-  if (!logos.length) return;
+  const logos = Array.from(grid.querySelectorAll('.sponsor-logo'));
+  const STAGGER = 180;
 
-  let triggered = false;
-
-  const observer = new IntersectionObserver(
-    (entries) => {
+  const io = new IntersectionObserver(
+    (entries, obs) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && !triggered) {
-          triggered = true;
-
-          const STAGGER = 220;
-
+        if (entry.isIntersecting) {
+          // animate one-by-one
           logos.forEach((logo, i) => {
             setTimeout(() => {
               logo.classList.add('animate');
             }, i * STAGGER);
           });
-
-          observer.unobserve(container);
+          obs.unobserve(entry.target);
         }
       });
     },
     { threshold: 0.18 }
   );
 
-  observer.observe(container);
+  io.observe(grid);
 });
 
 document.addEventListener('DOMContentLoaded', () => {
