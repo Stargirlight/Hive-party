@@ -147,6 +147,7 @@
     padding: 30px;
     position: relative;
     transition: all 0.3s ease;
+    max-width: 100%;
 }
 
 .ticket-card:hover {
@@ -162,7 +163,7 @@
 
 .popular-badge {
     position: absolute;
-    top: -12px;
+    top: -6px;
     right: 20px;
     background: #da3f08;
     color: #fff;
@@ -361,7 +362,7 @@
 }
 
 .form-group input {
-    width: 100%;
+    max-width: 100%;
     padding: 15px 20px;
     border: 2px solid rgba(218, 63, 8, 0.3);
     border-radius: 8px;
@@ -722,6 +723,11 @@
 
     .ticket-options {
         grid-template-columns: 1fr;
+    }
+
+    .ticket-card {
+        max-width: 80%;
+        margin: 0 auto;
     }
 
     .form-actions {
