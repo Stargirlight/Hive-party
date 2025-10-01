@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - The Hive Party</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./checkout.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <img src="./assets/images/logo (1).png" alt="Logo" class="preloader-logo">
+    </div>
+
+    <!-- Header Navigation -->
+    <section class="header">
+        <div class="LayoutIndex-header-nav-wrap">
+            <div class="navbar section-wrapper">
+                <div class="HeaderNavComponent">
+                    <div class="HeaderNavComponent-size-wrap">
+                        <div class="HeaderNavComponent-logo">
+                            <figure class="HeaderNavComponent-imgbox">
+                                <a href="./index.html">
+                                    <img src="./assets/images/logo (1).png" alt="logo image" class="logo"/>
+                                </a>
+                            </figure>
+                        </div>
+                        <div class="hamburger" id="hamburger">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="HeaderNavComponent-nav-link-listbox" id="nav-links">
+                            <div class="HeaderNavComponent-item-row">
+                                <a href="./index.html" class="HeaderNavComponent-name">home</a>
+                            </div>
+                            <div class="HeaderNavComponent-item-row">
+                                <a href="./index.html#about" class="HeaderNavComponent-name">About us</a>
+                            </div>
+                            <div class="HeaderNavComponent-item-row">
+                                <a href="./index.html#sponsors" class="HeaderNavComponent-name">Sponsors</a>
+                            </div>
+                            <div class="HeaderNavComponent-item-row">
+                                <a href="./ticket.html" class="HeaderNavComponent-name">Tickets</a>
+                            </div>
+                            <div class="HeaderNavComponent-item-row">
+                                <a href="./index.html#faqs" class="HeaderNavComponent-name">faqs</a>
+                            </div>
+                            <div class="HeaderNavComponent-item-row">
+                                <a href="./contact.html" class="HeaderNavComponent-name">contact us</a>
+                            </div>
+                            <div class="HeaderNavComponent-item-row">
+                                <a href="./location.html" class="HeaderNavComponent-name">getting here</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout Container -->
+    <div class="checkout-wrapper">
+        <div class="checkout-container section-wrapper">
+
+            <!-- Header -->
+            <header class="checkout-header">
+                <h1 class="checkout-title">Complete Your Order</h1>
+                <p class="checkout-subtitle">Get your tickets to The Hive Party!</p>
+            </header>
+
+            <!-- Step Indicator -->
+            <div class="steps-indicator">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Select Tickets</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Your Details</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Payment</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+
+            <!-- Step 1: Ticket Selection -->
+            <div class="step-content" id="step1">
+                <h2 class="step-heading">Select Your Tickets</h2>
+                <div class="ticket-options">
+                    <div class="ticket-card" data-type="regular" data-price="10000">
+                        <div class="ticket-header">
+                            <h3>Regular Ticket</h3>
+                            <div class="ticket-price">₦10,000</div>
+                        </div>
+                        <ul class="ticket-features">
+                            <li>✓ Entry to main event</li>
+                            <li>✓ Access to all stages</li>
+                            <li>✓ Free parking</li>
+                            <li>✓ Merchandise discount</li>
+                        </ul>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus">-</button>
+                            <input type="number" class="qty-input" value="0" min="0" max="10" readonly>
+                            <button class="qty-btn plus">+</button>
+                        </div>
+                    </div>
+
+                    <div class="ticket-card popular" data-type="vip" data-price="30000">
+                        <div class="popular-badge">MOST POPULAR</div>
+                        <div class="ticket-header">
+                            <h3>VIP Ticket</h3>
+                            <div class="ticket-price">₦30,000</div>
+                        </div>
+                        <ul class="ticket-features">
+                            <li>✓ Everything in Regular</li>
+                            <li>✓ VIP lounge access</li>
+                            <li>✓ Premium viewing area</li>
+                            <li>✓ Complimentary drinks</li>
+                            <li>✓ Meet & greet with artists</li>
+                        </ul>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus">-</button>
+                            <input type="number" class="qty-input" value="0" min="0" max="10" readonly>
+                            <button class="qty-btn plus">+</button>
+                        </div>
+                    </div>
+
+                    <div class="ticket-card" data-type="bronze" data-price="500000">
+                        <div class="ticket-header">
+                            <h3>Bronze Table</h3>
+                            <div class="ticket-price">₦500,000</div>
+                        </div>
+                        <ul class="ticket-features">
+                            <li>✓ Table for 10 guests</li>
+                            <li>✓ Premium seating area</li>
+                            <li>✓ Complimentary drinks</li>
+                            <li>✓ Dedicated waitstaff</li>
+                        </ul>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus">-</button>
+                            <input type="number" class="qty-input" value="0" min="0" max="5" readonly>
+                            <button class="qty-btn plus">+</button>
+                        </div>
+                    </div>
+
+                    <div class="ticket-card" data-type="platinum" data-price="1000000">
+                        <div class="ticket-header">
+                            <h3>Platinum Table</h3>
+                            <div class="ticket-price">₦1,000,000</div>
+                        </div>
+                        <ul class="ticket-features">
+                            <li>✓ Table for 10 guests</li>
+                            <li>✓ VIP seating area</li>
+                            <li>✓ Premium drinks package</li>
+                            <li>✓ Dedicated waitstaff</li>
+                            <li>✓ Meet & greet with performers</li>
+                        </ul>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus">-</button>
+                            <input type="number" class="qty-input" value="0" min="0" max="5" readonly>
+                            <button class="qty-btn plus">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-summary">
+                    <h3>Order Summary</h3>
+                    <div id="summaryContent">
+                        <p class="empty-summary">No tickets selected</p>
+                    </div>
+                    <div class="total-section">
+                        <span>Total:</span>
+                        <span class="total-amount">₦ 0</span>
+                    </div>
+                </div>
+
+                <button class="hero-button btn-next" id="btnStep1" disabled>Continue to Details</button>
+            </div>
+
+            <!-- Step 2: Customer Details -->
+            <div class="step-content hidden" id="step2">
+                <h2 class="step-heading">Your Details</h2>
+                <form class="details-form" id="detailsForm">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" placeholder="0712345678" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="btnBack1">Back</button>
+                        <button type="submit" class="hero-button">Continue to Payment</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Step 3: Payment Instructions -->
+            <div class="step-content hidden" id="step3">
+                <h2 class="step-heading">Payment Instructions</h2>
+
+                <div class="timer-section">
+                    <div class="timer-icon">⏱️</div>
+                    <div class="timer-content">
+                        <h3>Complete Payment Within:</h3>
+                        <div class="countdown" id="countdown">30:00</div>
+                        <p class="timer-warning">Your order will expire after this time</p>
+                    </div>
+                </div>
+
+                <div class="order-info-card">
+                    <h3>Order Information</h3>
+                    <div class="info-row">
+                        <span>Order Number:</span>
+                        <strong id="orderNumber">-</strong>
+                    </div>
+                    <div class="info-row">
+                        <span>Reference Code:</span>
+                        <strong id="referenceCode">-</strong>
+                    </div>
+                    <div class="info-row">
+                        <span>Amount to Pay:</span>
+                        <strong class="highlight" id="amountToPay">₦ 0</strong>
+                    </div>
+                </div>
+
+                <div class="payment-methods">
+                    <h3>Payment Options</h3>
+
+                    <div class="payment-option">
+                        <h4>🏦 Bank Transfer</h4>
+                        <div class="bank-details">
+                            <div class="detail-row">
+                                <span>Bank Name:</span>
+                                <strong>Access Bank Nigeria</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Account Name:</span>
+                                <strong>Hive Party Events</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Account Number:</span>
+                                <strong class="copy-text">0123456789</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Reference:</span>
+                                <strong class="copy-text" id="bankReference">-</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payment-option">
+                        <h4>💳 Card Payment / USSD</h4>
+                        <p style="color: #ccc; margin: 10px 0;">You can also pay via:</p>
+                        <ul style="color: #ccc; margin-left: 20px;">
+                            <li>Online card payment (Visa, Mastercard, Verve)</li>
+                            <li>USSD transfer from your bank</li>
+                            <li>Mobile banking app transfer</li>
+                        </ul>
+                        <p style="color: #da3f08; margin-top: 15px; font-weight: 600;">
+                            Use Reference Code: <strong class="copy-text" id="paymentReference">-</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="upload-section">
+                    <h3>Upload Payment Proof</h3>
+                    <p>After making payment, upload your receipt/screenshot</p>
+
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="fileInput" accept="image/*,.pdf" hidden>
+                        <div class="upload-placeholder">
+                            <div class="upload-icon">📤</div>
+                            <p>Click to upload or drag and drop</p>
+                            <span>PNG, JPG or PDF (max 5MB)</span>
+                        </div>
+                        <div class="upload-preview hidden" id="uploadPreview">
+                            <img id="previewImage" src="" alt="Preview">
+                            <button class="btn-remove" id="btnRemoveFile">Remove</button>
+                        </div>
+                    </div>
+
+                    <button class="hero-button btn-submit" id="btnSubmitProof" disabled>
+                        Submit Payment Proof
+                    </button>
+                </div>
+
+                <button class="btn-secondary" id="btnBack2">Back</button>
+            </div>
+
+            <!-- Step 4: Confirmation -->
+            <div class="step-content hidden" id="step4">
+                <div class="success-animation">
+                    <div class="checkmark">✓</div>
+                </div>
+                <h2 class="step-heading">Payment Proof Submitted!</h2>
+                <p class="success-message">
+                    Thank you! Your payment proof has been received and is being reviewed by our team.
+                    You will receive a confirmation email once your payment is verified.
+                </p>
+
+                <div class="confirmation-details">
+                    <h3>What's Next?</h3>
+                    <ul class="next-steps">
+                        <li>✓ We'll verify your payment within 1-2 hours</li>
+                        <li>✓ You'll receive your tickets via email</li>
+                        <li>✓ Present your ticket QR code at the event entrance</li>
+                    </ul>
+                </div>
+
+                <div class="order-tracking">
+                    <h3>Track Your Order</h3>
+                    <p>Order Number: <strong id="finalOrderNumber">-</strong></p>
+                    <button class="hero-button" id="btnTrackOrder">View Order Status</button>
+                </div>
+
+                <a href="index.html" class="btn-secondary">Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="./main.js"></script>
+    <script src="./checkout.js"></script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - The Hive Party</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <img src="./assets/images/logo (1).png" alt="Logo" class="preloader-logo">
+    </div>
+
+    <!-- Header Navigation -->
+    <section class="header">
+        <div class="LayoutIndex-header-nav-wrap">
+            <div class="navbar section-wrapper">
+                <div class="HeaderNavComponent">
+                    <div class="HeaderNavComponent-size-wrap">
+                        <div class="HeaderNavComponent-logo">
+                            <figure class="HeaderNavComponent-imgbox">
+                                <a href="./index.html">
+                                    <img src="./assets/images/logo (1).png" alt="logo image" class="logo"/>
+                                </a>
+                            </figure>
+                        </div>
+                        <div class="hamburger" id="hamburger">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="HeaderNavComponent-nav-link-listbox" id="nav-links">
+                            <div class="HeaderNavComponent-item-row">
+                                <a href="./index.html" class="HeaderNavComponent-name">home</a>
+                            </div>
+                            <div class="HeaderNavComponent-item-row">
+                                <a href="./admin.html" class="HeaderNavComponent-name">Admin Dashboard</a>
+                            </div>
+                            <div class="HeaderNavComponent-item-row">
+                                <a href="#" class="HeaderNavComponent-name" id="logoutBtn">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="admin-wrapper">
+        <div class="admin-container section-wrapper">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-content">
+                    <h1 class="admin-title">Admin Dashboard</h1>
+                    <p class="admin-subtitle">Manage Hive Party Ticket Orders</p>
+                    <p class="admin-email" id="adminEmail">admin@hiveparty.com</p>
+                </div>
+                <div class="header-actions">
+                    <button class="refresh-btn" id="refreshBtn">
+                        <span class="refresh-icon">🔄</span> Refresh
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Dashboard -->
+            <section class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon pending">⏳</div>
+                    <div class="stat-info">
+                        <h3 id="pendingCount">0</h3>
+                        <p>Pending Orders</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon approved">✅</div>
+                    <div class="stat-info">
+                        <h3 id="approvedCount">0</h3>
+                        <p>Approved Orders</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon revenue">💰</div>
+                    <div class="stat-info">
+                        <h3 id="totalRevenue">NGN 0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon tickets">🎟️</div>
+                    <div class="stat-info">
+                        <h3 id="ticketsSold">0</h3>
+                        <p>Tickets Sold</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filters & Search -->
+            <section class="filters-section">
+                <div class="filter-group">
+                    <label for="statusFilter">Status:</label>
+                    <select id="statusFilter">
+                        <option value="all">All Orders</option>
+                        <option value="pending_confirmation" selected>Pending Confirmation</option>
+                        <option value="approved">Approved</option>
+                        <option value="declined">Declined</option>
+                        <option value="expired">Expired</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="searchInput">Search:</label>
+                    <input type="text" id="searchInput" placeholder="Order #, email, name...">
+                </div>
+                <div class="filter-group">
+                    <label for="dateFilter">Date:</label>
+                    <input type="date" id="dateFilter">
+                </div>
+            </section>
+
+            <!-- Orders Table -->
+            <section class="orders-section">
+                <h2>Orders</h2>
+                <div class="table-container">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Ticket Type</th>
+                                <th>Qty</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <tr class="loading-row">
+                                <td colspan="8">
+                                    <div class="loading-spinner">Loading orders...</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Order Details</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Order details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Proof Modal -->
+    <div class="modal" id="proofModal">
+        <div class="modal-content proof-modal">
+            <div class="modal-header">
+                <h2>Payment Proof</h2>
+                <button class="close-btn" id="closeProofModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img id="proofImage" src="" alt="Payment Proof" class="proof-image">
+            </div>
+        </div>
+    </div>
+
+    <script src="./main.js"></script>
+    <script src="./admin.js"></script>
+</body>
+</html>
