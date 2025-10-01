@@ -208,6 +208,9 @@
     align-items: center;
     justify-content: center;
     gap: 15px;
+    pointer-events: auto;
+    position: relative;
+    z-index: 5;
 }
 
 .qty-btn {
@@ -222,6 +225,9 @@
     cursor: pointer;
     transition: all 0.3s ease;
     font-family: 'Poppins', sans-serif;
+    pointer-events: auto;
+    position: relative;
+    z-index: 10;
 }
 
 .qty-btn:hover {

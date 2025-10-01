@@ -13,13 +13,47 @@ let currentOrder = null;
 let countdownInterval = null;
 let uploadedFile = null;
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    setupTicketSelectors();
-    setupFormHandlers();
-    setupUploadHandler();
-    setupCopyToClipboard();
-    preSelectTicketFromURL();
+// Initialize - using window.addEventListener to ensure it runs after everything
+window.addEventListener('load', () => {
+    console.log('=== CHECKOUT INITIALIZATION STARTED ===');
+    console.log('Selected tickets object:', selectedTickets);
+
+    try {
+        setupTicketSelectors();
+        console.log('✓ Ticket selectors setup complete');
+    } catch (error) {
+        console.error('✗ Error in setupTicketSelectors:', error);
+    }
+
+    try {
+        setupFormHandlers();
+        console.log('✓ Form handlers setup complete');
+    } catch (error) {
+        console.error('✗ Error in setupFormHandlers:', error);
+    }
+
+    try {
+        setupUploadHandler();
+        console.log('✓ Upload handler setup complete');
+    } catch (error) {
+        console.error('✗ Error in setupUploadHandler:', error);
+    }
+
+    try {
+        setupCopyToClipboard();
+        console.log('✓ Copy to clipboard setup complete');
+    } catch (error) {
+        console.error('✗ Error in setupCopyToClipboard:', error);
+    }
+
+    try {
+        preSelectTicketFromURL();
+        console.log('✓ Pre-select from URL complete');
+    } catch (error) {
+        console.error('✗ Error in preSelectTicketFromURL:', error);
+    }
+
+    console.log('=== CHECKOUT INITIALIZATION COMPLETE ===');
 });
 
 // Pre-select ticket if coming from ticket.html
@@ -48,32 +82,72 @@ function preSelectTicketFromURL() {
 // === STEP 1: TICKET SELECTION ===
 
 function setupTicketSelectors() {
-    document.querySelectorAll('.ticket-card').forEach(card => {
-        const type = card.dataset.type;
-        const minusBtn = card.querySelector('.minus');
-        const plusBtn = card.querySelector('.plus');
+    console.log('Setting up ticket selectors...');
+
+    // Get all ticket cards
+    const cards = document.querySelectorAll('.ticket-card');
+    console.log('Found ticket cards:', cards.length);
+
+    cards.forEach((card) => {
+        const type = card.getAttribute('data-type');
+        const minusBtn = card.querySelector('.qty-btn.minus');
+        const plusBtn = card.querySelector('.qty-btn.plus');
         const input = card.querySelector('.qty-input');
 
-        minusBtn.addEventListener('click', () => {
+        if (!minusBtn || !plusBtn || !input) {
+            console.error(`Missing elements in card for type: ${type}`);
+            return;
+        }
+
+        console.log(`Setting up buttons for: ${type}`);
+
+        // Remove any existing event listeners by cloning
+        const newMinusBtn = minusBtn.cloneNode(true);
+        const newPlusBtn = plusBtn.cloneNode(true);
+        minusBtn.parentNode.replaceChild(newMinusBtn, minusBtn);
+        plusBtn.parentNode.replaceChild(newPlusBtn, plusBtn);
+
+        // Set up minus button
+        newMinusBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log(`Minus clicked for ${type}, current: ${selectedTickets[type].quantity}`);
+
             if (selectedTickets[type].quantity > 0) {
                 selectedTickets[type].quantity--;
                 input.value = selectedTickets[type].quantity;
                 updateOrderSummary();
+                console.log(`New quantity: ${selectedTickets[type].quantity}`);
             }
         });
 
-        plusBtn.addEventListener('click', () => {
-            if (selectedTickets[type].quantity < 10) {
+        // Set up plus button
+        const maxQty = (type === 'bronze' || type === 'platinum') ? 5 : 10;
+        newPlusBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log(`Plus clicked for ${type}, current: ${selectedTickets[type].quantity}`);
+
+            if (selectedTickets[type].quantity < maxQty) {
                 selectedTickets[type].quantity++;
                 input.value = selectedTickets[type].quantity;
                 updateOrderSummary();
+                console.log(`New quantity: ${selectedTickets[type].quantity}`);
+            } else {
+                console.log(`Max quantity reached: ${maxQty}`);
             }
         });
     });
 
-    document.getElementById('btnStep1').addEventListener('click', () => {
-        goToStep(2);
-    });
+    // Set up next button
+    const btnStep1 = document.getElementById('btnStep1');
+    if (btnStep1) {
+        btnStep1.addEventListener('click', () => {
+            goToStep(2);
+        });
+    }
+
+    console.log('Ticket selectors setup complete');
 }
 
 function updateOrderSummary() {
