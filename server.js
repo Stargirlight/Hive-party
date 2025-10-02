@@ -54,23 +54,27 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
-// Start server
-async function startServer() {
+// Initialize database connection
+async function initializeApp() {
     try {
         await connectDB();
-
-        // Create default admin if none exists
         await Admin.createDefaultAdmin();
-
-        app.listen(PORT, () => {
-            console.log(`🚀 Server running on http://localhost:${PORT}`);
-            console.log(`📊 Admin dashboard: http://localhost:${PORT}/admin.html`);
-            console.log(`🔐 Login page: http://localhost:${PORT}/login.html`);
-        });
     } catch (error) {
-        console.error('Failed to start server:', error);
-        process.exit(1);
+        console.error('Failed to initialize app:', error);
     }
 }
 
-startServer();
+// Initialize for serverless (Vercel)
+initializeApp();
+
+// Start server for local development
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+        console.log(`📊 Admin dashboard: http://localhost:${PORT}/admin.html`);
+        console.log(`🔐 Login page: http://localhost:${PORT}/login.html`);
+    });
+}
+
+// Export for Vercel serverless
+module.exports = app;
