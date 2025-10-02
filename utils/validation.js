@@ -10,7 +10,7 @@ function isValidEmail(email) {
 function isValidPhone(phone) {
     if (!phone) return true; // Phone is optional
 
-    const cleaned = phone.replace(/\s/g, '');
+    const cleaned = phone.replace(/[\s\-\(\)]/g, ''); // Remove spaces, dashes, parentheses
 
     // Nigerian format: 080xxxxxxxx, 070xxxxxxxx, +234xxxxxxxxxx
     const nigerianRegex = /^(\+?234|0)[789]\d{9}$/;
@@ -21,7 +21,10 @@ function isValidPhone(phone) {
     // International format (10-15 digits)
     const internationalRegex = /^\+?\d{10,15}$/;
 
-    return nigerianRegex.test(cleaned) || kenyanRegex.test(cleaned) || internationalRegex.test(cleaned);
+    // Simple format: at least 10 digits
+    const simpleRegex = /^\d{10,15}$/;
+
+    return nigerianRegex.test(cleaned) || kenyanRegex.test(cleaned) || internationalRegex.test(cleaned) || simpleRegex.test(cleaned);
 }
 
 // Validate ticket type
@@ -65,8 +68,10 @@ function validateOrderData(data) {
         errors.push('Name must be less than 100 characters');
     }
 
-    if (data.phone && !isValidPhone(data.phone)) {
-        errors.push('Invalid phone number format (use: 080xxxxxxxx, 070xxxxxxxx, or +234xxxxxxxxxx)');
+    if (!data.phone) {
+        errors.push('Phone number is required');
+    } else if (!isValidPhone(data.phone)) {
+        errors.push('Invalid phone number format. Please enter at least 10 digits.');
     }
 
     if (!data.ticketType) {

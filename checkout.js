@@ -247,16 +247,26 @@ async function createOrder() {
         });
 
         if (!response.ok) {
-            const error = await response.json();
-            console.error('Order creation failed:', error);
+            let errorMessage = 'Failed to create order. Please try again.';
 
-            // Show detailed error message
-            if (error.details && error.details.length > 0) {
-                alert('Validation errors:\n' + error.details.join('\n'));
-            } else {
-                alert(error.error || 'Failed to create order');
+            try {
+                const error = await response.json();
+                console.error('Order creation failed:', error);
+
+                // Show detailed error message
+                if (error.details && error.details.length > 0) {
+                    errorMessage = 'Please fix the following:\n\n' + error.details.join('\n');
+                } else if (error.message) {
+                    errorMessage = error.message;
+                } else if (error.error) {
+                    errorMessage = error.error;
+                }
+            } catch (e) {
+                console.error('Could not parse error response:', e);
             }
-            throw new Error(error.error || 'Failed to create order');
+
+            alert(errorMessage);
+            throw new Error(errorMessage);
         }
 
         const result = await response.json();
