@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const { connectDB } = require('../src/db/connection');
@@ -19,6 +20,7 @@ app.use(cors({
     origin: true,
     credentials: true
 }));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
