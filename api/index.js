@@ -29,7 +29,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false, // Set to true in production with HTTPS
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
@@ -61,21 +61,24 @@ async function initializeApp() {
     try {
         await connectDB();
         await Admin.createDefaultAdmin();
+        console.log('✅ App initialized successfully');
     } catch (error) {
         console.error('Failed to initialize app:', error);
     }
 }
 
-// Initialize for serverless (Vercel)
-initializeApp();
-
 // Start server for local development
 if (require.main === module) {
-    app.listen(PORT, () => {
-        console.log(`🚀 Server running on http://localhost:${PORT}`);
-        console.log(`📊 Admin dashboard: http://localhost:${PORT}/admin.html`);
-        console.log(`🔐 Login page: http://localhost:${PORT}/login.html`);
+    initializeApp().then(() => {
+        app.listen(PORT, () => {
+            console.log(`🚀 Server running on http://localhost:${PORT}`);
+            console.log(`📊 Admin dashboard: http://localhost:${PORT}/admin.html`);
+            console.log(`🔐 Login page: http://localhost:${PORT}/login.html`);
+        });
     });
+} else {
+    // Initialize for serverless (Vercel) - don't wait
+    initializeApp();
 }
 
 // Export for Vercel serverless
