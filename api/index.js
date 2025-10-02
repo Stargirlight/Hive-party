@@ -4,12 +4,12 @@ const path = require('path');
 const session = require('express-session');
 require('dotenv').config();
 
-const { connectDB } = require('../db/connection');
-const adminRoutes = require('../routes/admin');
-const orderRoutes = require('../routes/orders');
-const { router: authRoutes, requireAuth } = require('../routes/auth');
-const realtimeService = require('../utils/realtime');
-const Admin = require('../db/models/Admin');
+const { connectDB } = require('../src/db/connection');
+const adminRoutes = require('../src/routes/admin');
+const orderRoutes = require('../src/routes/orders');
+const { router: authRoutes, requireAuth } = require('../src/routes/auth');
+// const realtimeService = require('../src/utils/realtime'); // Disabled for serverless
+const Admin = require('../src/db/models/Admin');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,7 +21,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Session middleware
 app.use(session({
@@ -41,17 +41,19 @@ app.use('/api/admin', requireAuth, adminRoutes);
 app.use('/api/orders', orderRoutes);
 
 // Real-time updates endpoint (Server-Sent Events)
-app.get('/api/realtime', (req, res) => {
-    realtimeService.addClient(res);
-});
+// NOTE: SSE doesn't work on Vercel serverless - disabled for production
+// For local development, uncomment the line below
+// app.get('/api/realtime', (req, res) => {
+//     realtimeService.addClient(res);
+// });
 
 // Serve static files
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'admin.html'));
+    res.sendFile(path.join(__dirname, '..', 'public', 'admin.html'));
 });
 
 // Initialize database connection

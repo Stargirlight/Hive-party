@@ -3,15 +3,28 @@ require('dotenv').config();
 
 const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/hive-party';
 
+// Cache connection for serverless
+let cachedConnection = null;
+
 async function connectDB() {
+  // Reuse existing connection if available (important for serverless)
+  if (cachedConnection && mongoose.connection.readyState === 1) {
+    console.log('♻️  Reusing existing MongoDB connection');
+    return cachedConnection;
+  }
+
   try {
-    await mongoose.connect(uri);
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    cachedConnection = mongoose.connection;
     console.log('✅ Connected to MongoDB via Mongoose');
     console.log(`📍 Database: ${mongoose.connection.name}`);
-    return mongoose.connection;
+    return cachedConnection;
   } catch (error) {
     console.error('❌ MongoDB connection error:', error);
-    process.exit(1);
+    throw error; // Don't use process.exit in serverless
   }
 }
 
