@@ -37,34 +37,49 @@ const upload = multer({
 // Create new order
 router.post('/', async (req, res) => {
     try {
+        console.log('📥 Received order creation request');
+        console.log('Request body:', JSON.stringify(req.body, null, 2));
+
         const { email, name, phone, ticketType, quantity, pricePerTicket } = req.body;
 
         // Validate input
+        console.log('🔍 Validating order data...');
         const validation = validateOrderData(req.body);
+
         if (!validation.isValid) {
+            console.error('❌ Validation failed:', validation.errors);
             return res.status(400).json({
                 success: false,
                 error: 'Validation failed',
                 details: validation.errors
             });
         }
+        console.log('✅ Validation passed');
 
         // Sanitize input
         const sanitizedName = sanitizeString(name);
         const sanitizedEmail = email.toLowerCase().trim();
+        console.log('🧹 Sanitized data:', { name: sanitizedName, email: sanitizedEmail });
 
         // Find or create user
+        console.log('👤 Finding/creating user...');
         const user = await User.findOrCreate(sanitizedEmail, sanitizedName, phone);
+        console.log('✅ User ready:', user._id);
 
         // Create order using model method
-        const order = await Order.createOrder({
+        console.log('📝 Creating order...');
+        const orderData = {
             userId: user._id,
             userEmail: sanitizedEmail,
             userName: sanitizedName,
             ticketType,
             quantity: parseInt(quantity),
             pricePerTicket: parseFloat(pricePerTicket)
-        });
+        };
+        console.log('Order data:', JSON.stringify(orderData, null, 2));
+
+        const order = await Order.createOrder(orderData);
+        console.log('✅ Order created successfully:', order.orderNumber);
 
         // Send order confirmation email
         try {
@@ -75,12 +90,15 @@ router.post('/', async (req, res) => {
             // Don't fail the order creation if email fails
         }
 
+        console.log('📤 Sending response...');
         res.status(201).json({
             success: true,
             order
         });
+        console.log('✅ Response sent successfully');
     } catch (error) {
-        console.error('Error creating order:', error);
+        console.error('❌ Error creating order:', error);
+        console.error('Error stack:', error.stack);
         res.status(500).json({
             success: false,
             error: 'Failed to create order',

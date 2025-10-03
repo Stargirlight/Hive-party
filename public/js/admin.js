@@ -1,8 +1,6 @@
 // Admin Dashboard JavaScript
 // Use relative URL to work on both localhost and deployed environments
-const API_BASE_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:3000/api'
-    : '/api';
+const API_BASE_URL = '/api';
 
 let allOrders = [];
 let currentFilter = 'pending_confirmation';

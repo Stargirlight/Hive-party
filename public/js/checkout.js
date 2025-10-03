@@ -1,8 +1,6 @@
 // Checkout Flow JavaScript
 // Use relative URL to work on both localhost and deployed environments
-const API_BASE_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:3000/api'
-    : '/api';
+const API_BASE_URL = '/api';
 
 let currentStep = 1;
 let selectedTickets = {
@@ -241,13 +239,17 @@ async function createOrder() {
             pricePerTicket
         };
 
-        console.log('Creating order with data:', orderData);
+        console.log('📤 Creating order with data:', orderData);
+        console.log('🌐 API URL:', `${API_BASE_URL}/orders`);
 
         const response = await fetch(`${API_BASE_URL}/orders`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
         });
+
+        console.log('📥 Response status:', response.status);
+        console.log('📥 Response ok:', response.ok);
 
         if (!response.ok) {
             let errorMessage = 'Failed to create order. Please try again.';
