@@ -78,10 +78,22 @@ if (require.main === module) {
             console.log(`🔐 Login page: http://localhost:${PORT}/login.html`);
         });
     });
-} else {
-    // Initialize for serverless (Vercel) - don't wait
-    initializeApp();
 }
+
+// For Vercel serverless - ensure DB connects on first request
+let dbInitialized = false;
+app.use(async (req, res, next) => {
+    if (!dbInitialized) {
+        try {
+            await connectDB();
+            await Admin.createDefaultAdmin();
+            dbInitialized = true;
+        } catch (error) {
+            console.error('DB init error:', error);
+        }
+    }
+    next();
+});
 
 // Export for Vercel serverless
 module.exports = app;
