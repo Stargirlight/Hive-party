@@ -15,8 +15,10 @@ async function connectDB() {
 
   try {
     await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 30000, // Increased for Vercel cold starts
       socketTimeoutMS: 45000,
+      maxPoolSize: 10,
+      minPoolSize: 1,
     });
     cachedConnection = mongoose.connection;
     console.log('✅ Connected to MongoDB via Mongoose');

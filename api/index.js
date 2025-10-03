@@ -37,6 +37,34 @@ app.use(session({
     }
 }));
 
+// For Vercel serverless - ensure DB connects before handling requests
+let dbInitPromise = null;
+app.use(async (req, res, next) => {
+    try {
+        // If connection is in progress, wait for it
+        if (dbInitPromise) {
+            await dbInitPromise;
+        }
+        // If not connected, start connection
+        else if (!dbInitPromise) {
+            dbInitPromise = (async () => {
+                await connectDB();
+                await Admin.createDefaultAdmin();
+                console.log('✅ DB initialized for serverless');
+            })();
+            await dbInitPromise;
+        }
+        next();
+    } catch (error) {
+        console.error('DB init error:', error);
+        res.status(503).json({
+            success: false,
+            error: 'Database unavailable',
+            message: error.message
+        });
+    }
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', requireAuth, adminRoutes);
@@ -79,21 +107,6 @@ if (require.main === module) {
         });
     });
 }
-
-// For Vercel serverless - ensure DB connects on first request
-let dbInitialized = false;
-app.use(async (req, res, next) => {
-    if (!dbInitialized) {
-        try {
-            await connectDB();
-            await Admin.createDefaultAdmin();
-            dbInitialized = true;
-        } catch (error) {
-            console.error('DB init error:', error);
-        }
-    }
-    next();
-});
 
 // Export for Vercel serverless
 module.exports = app;
