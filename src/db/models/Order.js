@@ -46,7 +46,13 @@ const orderSchema = new mongoose.Schema({
     enum: ['pending_payment', 'pending_confirmation', 'approved', 'declined', 'expired', 'cancelled'],
     default: 'pending_payment'
   },
-  paymentProofUrl: String,
+  paymentProofUrl: String, // Deprecated - kept for backward compatibility
+  paymentProof: {
+    data: String, // base64 encoded
+    contentType: String,
+    filename: String,
+    uploadedAt: Date
+  },
   expiresAt: Date,
   confirmedAt: Date,
   adminNotes: String
@@ -130,8 +136,13 @@ orderSchema.statics.expireOldOrders = function() {
 };
 
 // Upload payment proof
-orderSchema.methods.uploadPaymentProof = async function(proofUrl) {
-  this.paymentProofUrl = proofUrl;
+orderSchema.methods.uploadPaymentProof = async function(proofData) {
+  // Support both old (string URL) and new (object with base64) formats
+  if (typeof proofData === 'string') {
+    this.paymentProofUrl = proofData;
+  } else {
+    this.paymentProof = proofData;
+  }
   this.status = 'pending_confirmation';
   await this.save();
   return this;

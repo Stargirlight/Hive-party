@@ -7,16 +7,8 @@ const User = require('../db/models/User');
 const { validateOrderData, sanitizeString } = require('../utils/validation');
 const { sendEmail, emailTemplates } = require('../utils/emailService');
 
-// Configure multer for payment proof uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/payment-proofs/');
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, 'proof-' + uniqueSuffix + path.extname(file.originalname));
-    }
-});
+// Configure multer for payment proof uploads (memory storage for Vercel)
+const storage = multer.memoryStorage();
 
 const upload = multer({
     storage,
@@ -160,9 +152,16 @@ router.post('/:orderId/upload-proof', upload.single('paymentProof'), async (req,
             });
         }
 
-        // Save file path using model method
-        const proofUrl = `/uploads/payment-proofs/${req.file.filename}`;
-        await order.uploadPaymentProof(proofUrl);
+        // Convert file to base64 and store in database (Vercel has no persistent filesystem)
+        const base64Data = req.file.buffer.toString('base64');
+        const proofData = {
+            data: base64Data,
+            contentType: req.file.mimetype,
+            filename: req.file.originalname,
+            uploadedAt: new Date()
+        };
+
+        await order.uploadPaymentProof(proofData);
 
         // Send payment received email
         try {
@@ -174,8 +173,7 @@ router.post('/:orderId/upload-proof', upload.single('paymentProof'), async (req,
 
         res.json({
             success: true,
-            message: 'Payment proof uploaded successfully. Your payment is under review.',
-            proofUrl
+            message: 'Payment proof uploaded successfully. Your payment is under review.'
         });
     } catch (error) {
         console.error('Error uploading payment proof:', error);
