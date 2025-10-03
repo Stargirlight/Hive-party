@@ -130,6 +130,7 @@
     font-size: 2.5rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-align: center;
 }
 
 /* Ticket Cards */
@@ -513,10 +514,12 @@
     border-bottom: 1px solid rgba(218, 63, 8, 0.2);
     color: #ccc;
     font-family: 'Poppins', sans-serif;
+    flex-wrap: wrap;
 }
 
 .detail-row strong {
     color: #fff;
+    text-decoration: none !important;
 }
 
 .copy-text {
@@ -741,6 +744,15 @@
 
     .step-content {
         padding: 30px 20px;
+    }
+
+    .success-message {
+        font-size: 1.05rem;
+    }
+
+    .btn-secondary {
+        margin: 20px auto 0;
+        width: 73%;
     }
 }
 
