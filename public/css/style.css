@@ -223,7 +223,7 @@ h6 {
   z-index: 50;
   background-color: #da3f08;
   padding: 15px;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   text-decoration: none;
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
@@ -234,7 +234,7 @@ h6 {
 .hero-button:hover {
   background-color: transparent;
   color: #da3f08;
-  border: 1px solid #da3f08;
+  border: 2px solid #da3f08;
 }
 
 .hero-background-img::before {
@@ -652,7 +652,7 @@ h6 {
 .highlights-button2 {
   font-size: 18px;
   color: #da3f08;
-  border: 1px solid #da3f08;
+  border: 2px solid #da3f08;
   background-color: transparent;
 }
 
