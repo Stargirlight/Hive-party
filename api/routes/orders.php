@@ -103,12 +103,12 @@ function createOrder($input) {
     $orderId = $storage->insert('orders', $orderData);
     $orderData['id'] = $orderId;
 
-    // Send confirmation email (uncomment when email is configured)
-    // if (file_exists(__DIR__ . '/../config/email.php')) {
-    //     require_once __DIR__ . '/../config/email.php';
-    //     sendOrderConfirmationEmail($orderData);
-    //     notifyAdminNewOrder($orderData);
-    // }
+    // Send confirmation email
+    if (file_exists(__DIR__ . '/../config/email.php')) {
+        require_once __DIR__ . '/../config/email.php';
+        sendOrderConfirmationEmail($orderData);
+        notifyAdminNewOrder($orderData);
+    }
 
     sendJson([
         'success' => true,
@@ -210,11 +210,11 @@ function uploadPaymentProof($orderId) {
         ]
     );
 
-    // Send notification email (uncomment when email is configured)
-    // if (file_exists(__DIR__ . '/../config/email.php')) {
-    //     require_once __DIR__ . '/../config/email.php';
-    //     notifyAdminPaymentProof($order);
-    // }
+    // Send notification email
+    if (file_exists(__DIR__ . '/../config/email.php')) {
+        require_once __DIR__ . '/../config/email.php';
+        notifyAdminPaymentProof($order);
+    }
 
     sendJson([
         'success' => true,

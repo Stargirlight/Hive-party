@@ -1,35 +1,147 @@
 <?php
 // Email configuration
 
-// Email settings - Update these with your actual values
-define('SMTP_HOST', 'smtp.gmail.com'); // Or your hosting provider's SMTP
-define('SMTP_PORT', 587);
-define('SMTP_USERNAME', 'your-email@example.com'); // Change this
-define('SMTP_PASSWORD', 'your-app-password'); // Change this
-define('SMTP_FROM_EMAIL', 'noreply@hiveparty.com'); // Change this
+// Email settings
+define('SMTP_HOST', 'mail.ebiperre.tech');
+define('SMTP_PORT', 465); // SSL port
+define('SMTP_USERNAME', 'test@ebiperre.tech');
+define('SMTP_PASSWORD', ''); // TODO: Add your email password here
+define('SMTP_FROM_EMAIL', 'test@ebiperre.tech');
 define('SMTP_FROM_NAME', 'Hive Party');
-define('ADMIN_EMAIL', 'admin@hiveparty.com'); // Change this
+define('ADMIN_EMAIL', 'test@ebiperre.tech');
+
+// Email enabled flag - set to true after adding password above
+define('EMAIL_ENABLED', true); // Emails are enabled
 
 /**
- * Send email using PHP mail() function
- * For better deliverability, consider using PHPMailer library
+ * Send email using SMTP socket connection
  */
 function sendEmail($to, $subject, $htmlBody, $textBody = '') {
-    // Simple PHP mail() - works on most shared hosting
-    $headers = [
-        'From: ' . SMTP_FROM_NAME . ' <' . SMTP_FROM_EMAIL . '>',
-        'Reply-To: ' . SMTP_FROM_EMAIL,
-        'MIME-Version: 1.0',
-        'Content-Type: text/html; charset=UTF-8'
-    ];
-
-    $success = mail($to, $subject, $htmlBody, implode("\r\n", $headers));
-
-    if (!$success) {
-        error_log("Failed to send email to: $to, subject: $subject");
+    // Check if email is enabled
+    if (!EMAIL_ENABLED) {
+        error_log("Email not sent (EMAIL_ENABLED=false): To: $to, Subject: $subject");
+        return false;
     }
 
-    return $success;
+    // Check if password is set
+    if (empty(SMTP_PASSWORD)) {
+        error_log("Email not sent: SMTP_PASSWORD is empty");
+        return false;
+    }
+
+    // Validate email address
+    if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
+        error_log("Invalid email address: $to");
+        return false;
+    }
+
+    // Log email attempt
+    error_log("Attempting to send email to: $to, subject: $subject");
+
+    try {
+        // Connect to SMTP server with SSL
+        $context = stream_context_create([
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            ]
+        ]);
+
+        $smtp = stream_socket_client(
+            'ssl://' . SMTP_HOST . ':' . SMTP_PORT,
+            $errno,
+            $errstr,
+            30,
+            STREAM_CLIENT_CONNECT,
+            $context
+        );
+
+        if (!$smtp) {
+            error_log("SMTP connection failed: $errstr ($errno)");
+            return false;
+        }
+
+        // Read server greeting
+        $response = fgets($smtp, 515);
+        error_log("SMTP: $response");
+
+        // Send EHLO
+        fputs($smtp, "EHLO " . SMTP_HOST . "\r\n");
+        $response = fgets($smtp, 515);
+        error_log("EHLO: $response");
+
+        // Read all EHLO responses
+        while (substr($response, 3, 1) === '-') {
+            $response = fgets($smtp, 515);
+        }
+
+        // Send AUTH LOGIN
+        fputs($smtp, "AUTH LOGIN\r\n");
+        $response = fgets($smtp, 515);
+        error_log("AUTH: $response");
+
+        // Send username
+        fputs($smtp, base64_encode(SMTP_USERNAME) . "\r\n");
+        $response = fgets($smtp, 515);
+        error_log("USER: $response");
+
+        // Send password
+        fputs($smtp, base64_encode(SMTP_PASSWORD) . "\r\n");
+        $response = fgets($smtp, 515);
+        error_log("PASS: $response");
+
+        if (substr($response, 0, 3) !== '235') {
+            error_log("Authentication failed: $response");
+            fclose($smtp);
+            return false;
+        }
+
+        // Send MAIL FROM
+        fputs($smtp, "MAIL FROM: <" . SMTP_FROM_EMAIL . ">\r\n");
+        $response = fgets($smtp, 515);
+        error_log("MAIL FROM: $response");
+
+        // Send RCPT TO
+        fputs($smtp, "RCPT TO: <$to>\r\n");
+        $response = fgets($smtp, 515);
+        error_log("RCPT TO: $response");
+
+        // Send DATA
+        fputs($smtp, "DATA\r\n");
+        $response = fgets($smtp, 515);
+        error_log("DATA: $response");
+
+        // Build email headers and body
+        $headers = "From: " . SMTP_FROM_NAME . " <" . SMTP_FROM_EMAIL . ">\r\n";
+        $headers .= "Reply-To: " . SMTP_FROM_EMAIL . "\r\n";
+        $headers .= "To: $to\r\n";
+        $headers .= "Subject: $subject\r\n";
+        $headers .= "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+        $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
+        $headers .= "\r\n";
+
+        // Send headers and body
+        fputs($smtp, $headers . $htmlBody . "\r\n.\r\n");
+        $response = fgets($smtp, 515);
+        error_log("SEND: $response");
+
+        // Send QUIT
+        fputs($smtp, "QUIT\r\n");
+        fclose($smtp);
+
+        if (substr($response, 0, 3) === '250') {
+            error_log("Email sent successfully to: $to");
+            return true;
+        } else {
+            error_log("Failed to send email: $response");
+            return false;
+        }
+    } catch (Exception $e) {
+        error_log("Email exception: " . $e->getMessage());
+        return false;
+    }
 }
 
 /**
