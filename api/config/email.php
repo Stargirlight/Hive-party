@@ -62,40 +62,70 @@ function sendEmail($to, $subject, $htmlBody, $textBody = '') {
             return false;
         }
 
-        // Read server greeting
-        $response = fgets($smtp, 515);
-        error_log("SMTP: $response");
+        // Read server greeting (220)
+        $response = '';
+        while (true) {
+            $line = fgets($smtp, 515);
+            $response .= $line;
+            error_log("Greeting: " . trim($line));
+            // Stop when we get a line that doesn't start with "220-"
+            if (substr($line, 0, 4) !== '220-') {
+                break;
+            }
+        }
 
         // Send EHLO
         fputs($smtp, "EHLO " . SMTP_HOST . "\r\n");
-        $response = fgets($smtp, 515);
-        error_log("EHLO: $response");
 
-        // Read all EHLO responses
-        while (substr($response, 3, 1) === '-') {
-            $response = fgets($smtp, 515);
+        // Read all EHLO responses (250 or 250-)
+        $response = '';
+        while (true) {
+            $line = fgets($smtp, 515);
+            $response .= $line;
+            error_log("EHLO: " . trim($line));
+            // Stop when we get "250 " (with space, not dash)
+            if (substr($line, 0, 4) === '250 ') {
+                break;
+            }
         }
 
         // Send AUTH LOGIN
         fputs($smtp, "AUTH LOGIN\r\n");
         $response = fgets($smtp, 515);
-        error_log("AUTH: $response");
+        error_log("AUTH LOGIN response: " . trim($response));
 
-        // Send username
-        fputs($smtp, base64_encode(SMTP_USERNAME) . "\r\n");
-        $response = fgets($smtp, 515);
-        error_log("USER: $response");
-
-        // Send password
-        fputs($smtp, base64_encode(SMTP_PASSWORD) . "\r\n");
-        $response = fgets($smtp, 515);
-        error_log("PASS: $response");
-
-        if (substr($response, 0, 3) !== '235') {
-            error_log("Authentication failed: $response");
+        // Should get "334 VXNlcm5hbWU6" (asking for username)
+        if (substr($response, 0, 3) !== '334') {
+            error_log("AUTH LOGIN failed, expected 334, got: $response");
             fclose($smtp);
             return false;
         }
+
+        // Send username (base64 encoded)
+        fputs($smtp, base64_encode(SMTP_USERNAME) . "\r\n");
+        $response = fgets($smtp, 515);
+        error_log("Username response: " . trim($response));
+
+        // Should get "334 UGFzc3dvcmQ6" (asking for password)
+        if (substr($response, 0, 3) !== '334') {
+            error_log("Username failed, expected 334, got: $response");
+            fclose($smtp);
+            return false;
+        }
+
+        // Send password (base64 encoded)
+        fputs($smtp, base64_encode(SMTP_PASSWORD) . "\r\n");
+        $response = fgets($smtp, 515);
+        error_log("Password response: " . trim($response));
+
+        // Should get "235" (authentication successful)
+        if (substr($response, 0, 3) !== '235') {
+            error_log("Authentication failed, expected 235, got: $response");
+            fclose($smtp);
+            return false;
+        }
+
+        error_log("Authentication successful!");
 
         // Send MAIL FROM
         fputs($smtp, "MAIL FROM: <" . SMTP_FROM_EMAIL . ">\r\n");
