@@ -142,18 +142,22 @@ function sendEmail($to, $subject, $htmlBody, $textBody = '') {
         $response = fgets($smtp, 515);
         error_log("DATA: $response");
 
-        // Build email headers and body
+        // Build email headers with base64 encoding to avoid line length issues
         $headers = "From: " . SMTP_FROM_NAME . " <" . SMTP_FROM_EMAIL . ">\r\n";
         $headers .= "Reply-To: " . SMTP_FROM_EMAIL . "\r\n";
         $headers .= "To: $to\r\n";
         $headers .= "Subject: $subject\r\n";
         $headers .= "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+        $headers .= "Content-Transfer-Encoding: base64\r\n";
         $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
         $headers .= "\r\n";
 
+        // Encode body in base64 and chunk to 76 characters per line
+        $encodedBody = chunk_split(base64_encode($htmlBody), 76, "\r\n");
+
         // Send headers and body
-        fputs($smtp, $headers . $htmlBody . "\r\n.\r\n");
+        fputs($smtp, $headers . $encodedBody . "\r\n.\r\n");
         $response = fgets($smtp, 515);
         error_log("SEND: $response");
 
