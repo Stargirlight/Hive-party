@@ -173,6 +173,12 @@ function approveOrder($orderId, $input, $admin) {
         'orderNumber' => $order['order_number']
     ]);
 
+    // Send ticket email (uncomment when email is configured)
+    // if (file_exists(__DIR__ . '/../config/email.php')) {
+    //     require_once __DIR__ . '/../config/email.php';
+    //     sendTicketEmail($order, []);
+    // }
+
     sendJson([
         'success' => true,
         'message' => 'Order approved and tickets generated',
@@ -211,6 +217,12 @@ function declineOrder($orderId, $input, $admin) {
         'reason' => $reason,
         'orderNumber' => $order['order_number']
     ]);
+
+    // Send rejection email (uncomment when email is configured)
+    // if (file_exists(__DIR__ . '/../config/email.php')) {
+    //     require_once __DIR__ . '/../config/email.php';
+    //     sendRejectionEmail($order, $reason);
+    // }
 
     sendJson([
         'success' => true,

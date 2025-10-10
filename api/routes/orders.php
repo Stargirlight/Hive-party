@@ -2,7 +2,11 @@
 // Order routes using CSV storage
 
 function handleOrderRoutes($path, $method, $input) {
-    $pathParts = explode('/', trim($path, '/'));
+    // Remove empty parts from path
+    $pathParts = array_filter(explode('/', trim($path, '/')), function($part) {
+        return $part !== '';
+    });
+    $pathParts = array_values($pathParts); // Re-index array
 
     // Create new order: POST /api/orders
     if (count($pathParts) === 2 && $method === 'POST') {
@@ -21,12 +25,33 @@ function handleOrderRoutes($path, $method, $input) {
         getUserOrders($pathParts[3]);
     }
     else {
-        sendJson(['error' => 'Not found'], 404);
+        // Debug: Show what we received
+        sendJson([
+            'error' => 'Not found',
+            'debug' => [
+                'path' => $path,
+                'pathParts' => $pathParts,
+                'partCount' => count($pathParts),
+                'method' => $method,
+                'input' => $input
+            ]
+        ], 404);
     }
 }
 
 function createOrder($input) {
     global $storage;
+
+    // Debug: Log that we reached this function
+    error_log("createOrder called with input: " . json_encode($input));
+
+    if (!isset($storage)) {
+        sendJson([
+            'success' => false,
+            'error' => 'Storage not initialized',
+            'debug' => 'The $storage global variable is not set'
+        ], 500);
+    }
 
     $email = $input['email'] ?? null;
     $name = $input['name'] ?? null;
@@ -77,6 +102,13 @@ function createOrder($input) {
 
     $orderId = $storage->insert('orders', $orderData);
     $orderData['id'] = $orderId;
+
+    // Send confirmation email (uncomment when email is configured)
+    // if (file_exists(__DIR__ . '/../config/email.php')) {
+    //     require_once __DIR__ . '/../config/email.php';
+    //     sendOrderConfirmationEmail($orderData);
+    //     notifyAdminNewOrder($orderData);
+    // }
 
     sendJson([
         'success' => true,
@@ -178,6 +210,12 @@ function uploadPaymentProof($orderId) {
         ]
     );
 
+    // Send notification email (uncomment when email is configured)
+    // if (file_exists(__DIR__ . '/../config/email.php')) {
+    //     require_once __DIR__ . '/../config/email.php';
+    //     notifyAdminPaymentProof($order);
+    // }
+
     sendJson([
         'success' => true,
         'message' => 'Payment proof uploaded successfully. Your payment is under review.'
@@ -264,17 +302,17 @@ function findOrCreateUser($email, $name, $phone) {
 
 function formatOrderForResponse($order) {
     return [
-        'id' => $order['id'],
-        'orderNumber' => $order['order_number'],
-        'userId' => $order['user_id'],
-        'userEmail' => $order['user_email'],
-        'userName' => $order['user_name'],
-        'ticketType' => $order['ticket_type'],
-        'quantity' => intval($order['quantity']),
-        'pricePerTicket' => floatval($order['price_per_ticket']),
-        'totalAmount' => floatval($order['total_amount']),
-        'status' => $order['status'],
-        'createdAt' => $order['created_at'],
+        'id' => $order['id'] ?? null,
+        'orderNumber' => $order['order_number'] ?? null,
+        'userId' => $order['user_id'] ?? null,
+        'userEmail' => $order['user_email'] ?? null,
+        'userName' => $order['user_name'] ?? null,
+        'ticketType' => $order['ticket_type'] ?? null,
+        'quantity' => isset($order['quantity']) ? intval($order['quantity']) : 0,
+        'pricePerTicket' => isset($order['price_per_ticket']) ? floatval($order['price_per_ticket']) : 0,
+        'totalAmount' => isset($order['total_amount']) ? floatval($order['total_amount']) : 0,
+        'status' => $order['status'] ?? 'pending',
+        'createdAt' => $order['created_at'] ?? date('Y-m-d H:i:s'),
         'expiresAt' => $order['expires_at'] ?? null,
         'hasPaymentProof' => !empty($order['payment_proof_file']),
         'adminNotes' => $order['admin_notes'] ?? '',

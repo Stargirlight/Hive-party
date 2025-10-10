@@ -254,12 +254,19 @@ async function createOrder() {
         if (!response.ok) {
             let errorMessage = 'Failed to create order. Please try again.';
 
+            // Clone response so we can read it multiple times if needed
+            const responseClone = response.clone();
+
             try {
                 const error = await response.json();
                 console.error('Order creation failed:', error);
+                console.error('Full error object:', JSON.stringify(error, null, 2));
 
-                // Show detailed error message
-                if (error.details && error.details.length > 0) {
+                // Show detailed error message including debug info
+                if (error.debug) {
+                    console.error('DEBUG INFO:', error.debug);
+                    errorMessage = `Server Error:\n${error.error}\n\nDebug: ${JSON.stringify(error.debug, null, 2)}`;
+                } else if (error.details && error.details.length > 0) {
                     errorMessage = 'Please fix the following:\n\n' + error.details.join('\n');
                 } else if (error.message) {
                     errorMessage = error.message;
@@ -268,6 +275,10 @@ async function createOrder() {
                 }
             } catch (e) {
                 console.error('Could not parse error response:', e);
+                // Read cloned response as text
+                const text = await responseClone.text();
+                console.error('Response text:', text);
+                errorMessage = `Server error (${response.status}). The server returned HTML instead of JSON. Check if PHP files are uploaded correctly.`;
             }
 
             alert(errorMessage);
@@ -277,6 +288,20 @@ async function createOrder() {
         const result = await response.json();
         currentOrder = result.order || result;
         console.log('Order created successfully:', currentOrder);
+        console.log('Order ID field:', currentOrder.id);
+        console.log('Order _id field:', currentOrder._id);
+
+        // Normalize the order object (PHP uses 'id', JS expects '_id')
+        if (currentOrder.id && !currentOrder._id) {
+            currentOrder._id = currentOrder.id;
+            console.log('Set _id to:', currentOrder._id);
+        }
+        // Use orderNumber as referenceCode if not present
+        if (!currentOrder.referenceCode) {
+            currentOrder.referenceCode = currentOrder.orderNumber;
+        }
+
+        console.log('Final currentOrder object:', currentOrder);
 
         // Populate payment details
         document.getElementById('orderNumber').textContent = currentOrder.orderNumber;

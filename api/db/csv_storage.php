@@ -9,13 +9,23 @@ class CSVStorage {
 
         // Create data directory if it doesn't exist
         if (!is_dir($this->dataDir)) {
-            mkdir($this->dataDir, 0755, true);
+            if (!@mkdir($this->dataDir, 0755, true)) {
+                throw new Exception("Failed to create data directory: {$this->dataDir}. Check permissions.");
+            }
+        }
+
+        // Check if directory is writable
+        if (!is_writable($this->dataDir)) {
+            throw new Exception("Data directory is not writable: {$this->dataDir}. Please set permissions to 755.");
         }
 
         // Create .htaccess to protect data directory
         $htaccessPath = $this->dataDir . '/.htaccess';
         if (!file_exists($htaccessPath)) {
-            file_put_contents($htaccessPath, "Deny from all\n");
+            if (!@file_put_contents($htaccessPath, "Deny from all\n")) {
+                // Not critical, just log it
+                error_log("Warning: Could not create .htaccess in data directory");
+            }
         }
     }
 
@@ -39,8 +49,24 @@ class CSVStorage {
             $header = fgetcsv($handle);
 
             if ($header) {
+                $headerCount = count($header);
+
                 // Read data rows
                 while (($row = fgetcsv($handle)) !== false) {
+                    // Skip empty rows
+                    if (empty($row) || (count($row) === 1 && $row[0] === null)) {
+                        continue;
+                    }
+
+                    // Pad row with empty strings if it has fewer columns than header
+                    $rowCount = count($row);
+                    if ($rowCount < $headerCount) {
+                        $row = array_pad($row, $headerCount, '');
+                    } elseif ($rowCount > $headerCount) {
+                        // Trim extra columns if row has more than header
+                        $row = array_slice($row, 0, $headerCount);
+                    }
+
                     $record = array_combine($header, $row);
                     $records[] = $record;
                 }
@@ -236,5 +262,17 @@ class CSVStorage {
 }
 
 // Initialize storage
-$storage = new CSVStorage();
-$storage->initDefaultAdmin();
+try {
+    $storage = new CSVStorage();
+    $storage->initDefaultAdmin();
+} catch (Exception $e) {
+    header('Content-Type: application/json');
+    http_response_code(500);
+    echo json_encode([
+        'error' => 'Storage initialization failed',
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine()
+    ]);
+    exit();
+}

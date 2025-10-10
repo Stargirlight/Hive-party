@@ -2,12 +2,8 @@
 RewriteEngine On
 
 # Route all API requests to index.php
-RewriteRule ^api/(.*)$ /api/index.php [L,QSA]
+RewriteRule ^api/(.*)$ api/index.php [L,QSA]
 
 # Allow direct access to existing files
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
-
-# File upload settings
-php_value upload_max_filesize 10M
-php_value post_max_size 10M

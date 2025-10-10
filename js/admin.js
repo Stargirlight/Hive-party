@@ -3,7 +3,7 @@
 const API_BASE_URL = '/api';
 
 let allOrders = [];
-let currentFilter = 'pending_confirmation';
+let currentFilter = 'all'; // Changed from 'pending_confirmation' to show all by default
 
 // Initialize dashboard
 document.addEventListener('DOMContentLoaded', () => {
@@ -98,7 +98,15 @@ async function loadStats() {
         const response = await fetch(`${API_BASE_URL}/admin/stats`, {
             credentials: 'include'
         });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Stats API error:', response.status, errorText);
+            throw new Error(`API returned ${response.status}`);
+        }
+
         const stats = await response.json();
+        console.log('Stats loaded:', stats);
 
         document.getElementById('pendingCount').textContent = stats.pending || 0;
         document.getElementById('approvedCount').textContent = stats.approved || 0;
@@ -106,8 +114,11 @@ async function loadStats() {
         document.getElementById('ticketsSold').textContent = stats.ticketsSold || 0;
     } catch (error) {
         console.error('Error loading stats:', error);
-        // Use mock data for now
-        updateMockStats();
+        // Show actual data (zeros) instead of mock data
+        document.getElementById('pendingCount').textContent = '0';
+        document.getElementById('approvedCount').textContent = '0';
+        document.getElementById('totalRevenue').textContent = 'NGN 0';
+        document.getElementById('ticketsSold').textContent = '0';
     }
 }
 
@@ -127,12 +138,29 @@ async function loadOrders() {
         const response = await fetch(`${API_BASE_URL}/admin/orders`, {
             credentials: 'include'
         });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Orders API error:', response.status, errorText);
+            throw new Error(`API returned ${response.status}`);
+        }
+
         allOrders = await response.json();
+        console.log('Orders loaded:', allOrders);
+
+        // Normalize order objects (PHP uses 'id', JS expects '_id')
+        allOrders = allOrders.map(order => {
+            if (order.id && !order._id) {
+                order._id = order.id;
+            }
+            return order;
+        });
+
         filterOrders();
     } catch (error) {
         console.error('Error loading orders:', error);
-        // Use mock data for development
-        allOrders = getMockOrders();
+        // Show empty state instead of mock data
+        allOrders = [];
         filterOrders();
     }
 }
@@ -192,7 +220,7 @@ function renderOrders(orders) {
             <td>
                 <div class="action-buttons">
                     <button class="btn btn-view" onclick="viewOrder('${order._id}')">View</button>
-                    ${order.status === 'pending_confirmation' ? `
+                    ${['pending_confirmation', 'pending_verification', 'pending_payment'].includes(order.status) ? `
                         <button class="btn btn-approve" onclick="approveOrder('${order._id}')">Approve</button>
                         <button class="btn btn-decline" onclick="declineOrder('${order._id}')">Decline</button>
                     ` : ''}

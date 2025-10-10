@@ -1,0 +1,5 @@
+# Minimal .htaccess for testing
+RewriteEngine On
+
+# Route API requests to index.php
+RewriteRule ^api/(.*)$ api/index.php [L,QSA]

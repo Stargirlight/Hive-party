@@ -447,6 +447,15 @@ referrerpolicy="no-referrer-when-downgrade">
         </div>
         
       </section>
-    <script src="main.js"></script>
+    <script>
+      // Hide preloader
+      window.addEventListener('load', function () {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+          preloader.style.display = 'none';
+        }
+      });
+    </script>
+    <script src="./js/main.js"></script>
   </body>
 </html>
