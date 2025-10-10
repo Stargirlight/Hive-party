@@ -15,8 +15,9 @@ async function connectDB() {
 
   try {
     await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 30000, // Increased for Vercel cold starts
-      socketTimeoutMS: 45000,
+      serverSelectionTimeoutMS: 5000, // Quick timeout for cPanel
+      socketTimeoutMS: 10000,
+      connectTimeoutMS: 5000,
       maxPoolSize: 10,
       minPoolSize: 1,
     });
