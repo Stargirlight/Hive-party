@@ -64,6 +64,9 @@ if ($path === 'health' || $path === 'api/health') {
     ]);
 }
 
+// Debug: Log the incoming request
+error_log("REQUEST: $method $path");
+
 // Route handling
 if (strpos($path, 'api/auth') === 0) {
     handleAuthRoutes($path, $method, $input);
@@ -72,5 +75,13 @@ if (strpos($path, 'api/auth') === 0) {
 } elseif (strpos($path, 'api/orders') === 0) {
     handleOrderRoutes($path, $method, $input);
 } else {
-    sendJson(['error' => 'Not found'], 404);
+    // Debug: Show what path was received
+    sendJson([
+        'error' => 'Not found',
+        'debug' => [
+            'path' => $path,
+            'method' => $method,
+            'uri' => $_SERVER['REQUEST_URI']
+        ]
+    ], 404);
 }

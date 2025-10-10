@@ -1,28 +1,13 @@
 # Hive Party - PHP Application
-# This file routes all requests through PHP
-
 RewriteEngine On
 
-# Route API requests to PHP first (before static files)
-RewriteRule ^api/(.*)$ api/index.php [L,QSA]
+# Route all API requests to index.php
+RewriteRule ^api/(.*)$ /api/index.php [L,QSA]
 
-# Allow static files to be served directly
+# Allow direct access to existing files
 RewriteCond %{REQUEST_FILENAME} -f
-RewriteRule \.(html|css|js|png|jpg|jpeg|gif|svg|ico|pdf)$ - [L]
-
-# Route everything else to PHP
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ api/index.php [L,QSA]
-
-# Enable error display (remove in production)
-php_flag display_errors Off
-php_flag log_errors On
+RewriteRule ^ - [L]
 
 # File upload settings
 php_value upload_max_filesize 10M
 php_value post_max_size 10M
-
-# Session settings
-php_value session.gc_maxlifetime 86400
-php_flag session.cookie_httponly On
