@@ -3,11 +3,14 @@
 
 RewriteEngine On
 
+# Route API requests to PHP first (before static files)
+RewriteRule ^api/(.*)$ api/index.php [L,QSA]
+
 # Allow static files to be served directly
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule \.(html|css|js|png|jpg|jpeg|gif|svg|ico|pdf)$ - [L]
 
-# Route API requests to PHP
+# Route everything else to PHP
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ api/index.php [L,QSA]
